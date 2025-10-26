@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Update Student</title>
+</head>
+<body>
+<div th:fragment="content" class="tab-content" id="update-student">
+    <h2><i class="fas fa-user-edit"></i> Update Student Details</h2>
+
+    <form th:action="@{/update-student}" method="get" id="findStudentForm">
+        <div class="form-group search-section">
+            <label for="updateStudentId">Enter Student ID to Update</label>
+            <input type="text" 
+                   id="updateStudentId" 
+                   name="searchId" 
+                   th:value="${param.searchId}" 
+                   placeholder="Enter Student ID" 
+                   required
+                   pattern="[0-9]+"
+                   title="Student ID must contain only digits (0-9).">
+            
+            <button type="submit" class="btn-primary" style="margin-top: 0;">
+                <i class="fas fa-search"></i> Find Student
+            </button>
+        </div>
+    </form>
+
+    <div th:if="${foundStudent != null}" id="updateStudentDetails" 
+         style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+
+        <div class="message-box info">
+            <p><strong>Editing Details for: </strong> <span th:text="${foundStudent.fullName}"></span> (ID: <span th:text="${foundStudent.studentId}"></span>)</p>
+        </div>
+        
+        <form th:action="@{/update-student/submit}" method="post" th:object="${foundStudent}">
+            <input type="hidden" th:field="*{studentId}" />
+
+            <div class="form-group">
+                <label for="updateName">Full Name</label>
+                <input type="text" id="updateName" th:field="*{fullName}" required>
+            </div>
+            <div class="form-group">
+                <label for="updateBranch">Branch</label>
+                <select id="updateBranch" th:field="*{branch}" required>
+                    <option th:each="branch : ${availableBranches}" th:value="${branch}" th:text="${branch}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="updateSemester">Semester</label>
+                <select id="updateSemester" th:field="*{semester}" required>
+                    <option value="">Select Semester</option>
+                    <option th:each="sem : ${availableSemesters}" th:value="${sem}" th:text="${sem}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="updateGender">Gender</label>
+                <select id="updateGender" th:field="*{gender}" required>
+                    <option value="">Select Gender</option>
+                    <option th:each="gender : ${availableGenders}" th:value="${gender}" th:text="${gender}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-redo"></i> Update Details
+            </button>
+        </form>
+    </div>
+
+    <div th:if="${foundStudent == null and searchedId != null and errorMessage == null}" class="message-box error" style="margin-top: 20px;">
+        Student ID <strong th:text="${searchedId}"></strong> was not found.
+    </div>
+
+    <p th:if="${foundStudent == null and searchedId == null and errorMessage == null and successMessage == null}" style="font-style: italic; color: #6c757d; margin-top: 20px;">
+        Enter a Student ID above and press 'Find Student' to load details for editing...
+    </p>
+</div>
+</body>
+</html>

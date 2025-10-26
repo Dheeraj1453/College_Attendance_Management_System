@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | Attendance Manager'"></title>
+    
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div th:fragment="layout(pageTitle, contentFragmentName)">
+    <div class="container">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
+        <header class="header">
+            <h1>
+                <i class="fa-solid fa-graduation-cap header-icon"></i> College Attendance Management System
+            </h1>
+            </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2 class="sidebar-title">Admin Dashboard</h2> 
+                <a th:href="@{/add-student}" class="tab-btn" th:classappend="${page == 'add-student' ? 'active' : ''}">
+                    <i class="fas fa-user-plus"></i> Add Student
+                </a>
+                <a th:href="@{/mark-attendance}" class="tab-btn" th:classappend="${page == 'mark-attendance' ? 'active' : ''}">
+                    <i class="fas fa-calendar-check"></i> Mark Attendance
+                </a>
+                <a th:href="@{/update-student}" class="tab-btn" th:classappend="${page == 'update-student' ? 'active' : ''}">
+                    <i class="fas fa-user-edit"></i> Update Student
+                </a>
+                <a th:href="@{/delete-student}" class="tab-btn" th:classappend="${page == 'delete-student' ? 'active' : ''}">
+                    <i class="fas fa-user-minus"></i> Delete Student
+                </a>
+                <a th:href="@{/view-students}" class="tab-btn" th:classappend="${page == 'view-students' ? 'active' : ''}">
+                    <i class="fas fa-users"></i> View Students
+                </a>
+                <a th:href="@{/view-report}" class="tab-btn" th:classappend="${page == 'view-report' ? 'active' : ''}">
+                    <i class="fas fa-chart-bar"></i> View Report
+                </a>
+            </div>
+
+            <div class="content">
+                <div th:if="${successMessage}" class="message-box success" th:text="${successMessage}"></div>
+                <div th:if="${errorMessage}" class="message-box error" th:text="${errorMessage}"></div>
+                <div th:if="${infoMessage}" class="message-box info" th:text="${infoMessage}"></div>
+                <div th:if="${warningMessage}" class="message-box warning" th:text="${warningMessage}"></div>
+
+                <div th:replace="${contentFragmentName}">
+                    <h2>Welcome</h2>
+                    <p>Please select an option from the menu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Placeholder for any shared JavaScript logic
+        console.log("Layout loaded.");
+    </script>
+</div>
+</body>
+</html>

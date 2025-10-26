@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>View All Students</title>
+</head>
+<body>
+<div th:fragment="content" class="tab-content" id="view-students">
+    <h2><i class="fas fa-users"></i> All Registered Students</h2>
+
+    <div th:if="${allStudents != null and !allStudents.isEmpty()}" class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Full Name</th>
+                    <th>Branch</th>
+                    <th>Semester</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student : ${allStudents}">
+                    <td th:text="${student.studentId}">SID101</td>
+                    <td th:text="${student.fullName}">John Doe</td>
+                    <td th:text="${student.branch}">Computer Science & Engineering</td>
+                    <td th:text="${student.semester}">4</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${allStudents == null or allStudents.isEmpty()}" class="message-box info" style="margin-top: 20px;">
+        <p><i class="fas fa-info-circle"></i> No student records found in the database.</p>
+    </div>
+</div>
+</body>
+</html>

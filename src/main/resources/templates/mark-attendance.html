@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Mark Attendance</title>
+</head>
+<body>
+<div th:fragment="content" class="tab-content" id="mark-attendance">
+    <h2><i class="fas fa-calendar-check"></i> Mark Attendance</h2>
+
+    <form th:action="@{/mark-attendance}" method="get">
+        <div class="filter-section">
+            <select id="attendanceBranch" name="branch" required>
+                <option value="">Select Branch</option>
+                <option th:each="branch : ${availableBranches}" th:value="${branch}" th:text="${branch}"
+                        th:selected="${branch == selectedBranch}"></option>
+            </select>
+            <select id="attendanceSemester" name="semester" required>
+                <option value="">Select Semester</option>
+                <option th:each="sem : ${availableSemesters}" th:value="${sem}" th:text="${sem}"
+                        th:selected="${sem == selectedSemester}"></option>
+            </select>
+            
+            <input type="date" name="attendanceDate" th:value="${#dates.format(#dates.createToday(), 'yyyy-MM-dd')}" readonly class="date-input-field">
+            
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-users"></i> Load Students
+            </button>
+        </div>
+    </form>
+
+    <form th:if="${not #lists.isEmpty(attendanceWrapper.attendanceList)}"
+          th:action="@{/mark-attendance/submit}" 
+          th:object="${attendanceWrapper}"
+          method="post"
+          class="attendance-form-section" 
+          style="margin-top: 30px;">
+        
+        <div class="attendance-list-container">
+            <div class="attendance-row header-row">
+                <div class="student-id-col">Student ID</div>
+                <div class="student-name-col">Full Name</div>
+                <div class="present-col">Present</div>
+            </div>
+            
+            <div th:each="dto, iterStat : *{attendanceList}" class="attendance-row">
+                <div class="student-id-col" th:text="*{attendanceList[__${iterStat.index}__].studentId}">SID101</div>
+                <div class="student-name-col" th:text="*{attendanceList[__${iterStat.index}__].fullName}">John Doe</div>
+                <div class="present-col">
+                    <input type="hidden" th:field="*{attendanceList[__${iterStat.index}__].studentId}" />
+                    <input type="hidden" th:field="*{attendanceList[__${iterStat.index}__].fullName}" />
+                    <input type="hidden" th:field="*{attendanceList[__${iterStat.index}__].branch}" />
+                    <input type="hidden" th:field="*{attendanceList[__${iterStat.index}__].semester}" />
+
+                    <input type="checkbox"
+                           th:id="|present${iterStat.index}|"
+                           th:field="*{attendanceList[__${iterStat.index}__].present}" />
+                </div>
+            </div>
+            </div>
+        
+        <button type="submit" class="btn-primary" style="display: block; width: 100%; margin-top: 20px;">
+            <i class="fas fa-save"></i> Save Attendance
+        </button>
+    </form>
+
+    <div th:if="${selectedBranch != null and attendanceWrapper.attendanceList.isEmpty()}"
+        class="message-box warning" style="margin-top: 20px; text-align: center;">
+        <p style="margin: 0;"><i class="fas fa-exclamation-triangle"></i> No students found for **<span th:text="${selectedBranch}"></span>**, Semester **<span th:text="${selectedSemester}"></span>**.</p>
+    </div>
+
+    <div th:if="${selectedBranch == null and selectedSemester == null and attendanceWrapper.attendanceList.isEmpty()}"
+        id="instructionalMessage" class="message-box info" style="margin-top: 20px; text-align: center;">
+        <p style="margin: 0;"><i class="fas fa-info-circle"></i> Select a Branch and Semester above and click 'Load Students' to mark attendance.</p>
+    </div>
+    </div>
+</body>
+</html>

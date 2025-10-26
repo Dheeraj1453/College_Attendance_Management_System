@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Delete Student</title>
+</head>
+<body>
+<div th:fragment="content" class="tab-content" id="delete-student">
+    <h2><i class="fas fa-user-minus"></i> Delete Student Record</h2>
+
+    <form th:action="@{/delete-student}" method="get" id="deleteStudentSearchForm">
+        <div class="form-group search-section">
+            <label for="deleteStudentId">Enter Student ID to Delete</label>
+            <input type="text" id="deleteStudentId" name="searchId" th:value="${param.searchId}" placeholder="Enter Student ID" required>
+            <button type="submit" class="btn-primary btn-danger" style="margin-top: 0;">
+                <i class="fas fa-search"></i> Search Student
+            </button>
+        </div>
+    </form>
+
+    <div id="deleteStudentResult" class="delete-result" style="margin-top: 20px;">
+        
+        <p th:if="${param.searchId == null and errorMessage == null and successMessage == null}" id="deleteStudentMessage" style="font-style: italic; color: #6c757d;">
+            Enter a Student ID above and press 'Search Student'.
+        </p>
+
+        <div th:if="${studentToDelete != null and successMessage == null}">
+            
+            <div class="message-box info" style="margin-bottom: 20px;">
+                <h4><i class="fas fa-user-circle"></i> **Student Details Found:**</h4>
+                <p><strong>ID:</strong> <span th:text="${studentToDelete.studentId}">123</span></p>
+                <p><strong>Name:</strong> <span th:text="${studentToDelete.fullName}">John Doe</span></p>
+                <p><strong>Branch/Sem:</strong> <span th:text="${studentToDelete.branch} + ' / ' + ${studentToDelete.semester}">CSE / 4</span></p>
+            </div>
+            <div class="message-box warning">
+                <p><strong>WARNING:</strong> Are you absolutely sure you want to permanently delete the record for **<span th:text="${studentToDelete.fullName}">John Doe</span>** (ID: <span th:text="${studentToDelete.studentId}"></span>)?</p>
+                <p style="font-size: 0.9em; margin-top: 5px;">**NOTE:** This action is irreversible and will also delete all **Attendance Records** associated with this student.</p>
+            </div>
+
+            <form th:action="@{/delete-student/confirm}" method="post" style="margin-top: 15px;">
+                <input type="hidden" name="studentId" th:value="${studentToDelete.studentId}" />
+                <button type="submit" class="btn-primary btn-danger">
+                    <i class="fas fa-trash-alt"></i> CONFIRM DELETION
+                </button>
+                <a th:href="@{/delete-student}" class="btn-primary" style="background-color: var(--secondary-color); margin-left: 10px; padding: 10px 15px; border-radius: 5px; text-decoration: none;">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
